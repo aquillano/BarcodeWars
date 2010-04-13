@@ -8,6 +8,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/** The DataStore class uses SQLite to provide a client-side database for storing all data
+ * related to the playing of BarcodeWars, including wins, losses, energy points, number of
+ * infantry, and amount of knowledge
+ * 
+ * @author Greg Charette
+ * @author Steve Aquillano
+ *
+ */
 public class DataStore 
 {
     public static final String KEY_ROWID = "_id";
@@ -35,12 +43,21 @@ public class DataStore
     private DatabaseHelper DBHelper;
     private SQLiteDatabase db;
 
+    /** DataStore constructor initializes the database
+     * 
+     * @param ctx
+     */
     public DataStore(Context ctx) 
     {
         this.context = ctx;
         DBHelper = new DatabaseHelper(context);
     }
-        
+    
+    /** DatabaseHelper sets the parameters for the database
+     * 
+     * @author Greg's PC
+     *
+     */
     private static class DatabaseHelper extends SQLiteOpenHelper 
     {
         DatabaseHelper(Context context) 
@@ -66,20 +83,34 @@ public class DataStore
         }
     }    
     
-    //---opens the database---
+    /** Open method opens the database connection to SQLite
+     * 
+     * @return
+     * @throws SQLException
+     */
     public DataStore open() throws SQLException 
     {
         db = DBHelper.getWritableDatabase();
         return this;
     }
 
-    //---closes the database---    
+    /** Open method opens the database connection to SQLite
+     * 
+     */
     public void close() 
     {
         DBHelper.close();
     }
     
-    //---insert a title into the database---
+    /** insertRecord inserts a record into the SQLite database for storage
+     * 
+     * @param wins
+     * @param losses
+     * @param energy
+     * @param infantry
+     * @param knowledge
+     * @return
+     */
     public long insertRecord(int wins, int losses, int energy, int infantry, int knowledge) 
     {
         ContentValues initialValues = new ContentValues();
@@ -91,14 +122,22 @@ public class DataStore
         return db.insert(DATABASE_TABLE, null, initialValues);
     }
 
-    //---deletes a particular record---
+   /** deletRecord delets a record from the SQLite database
+    * 
+    * @param rowId
+    * @return
+    */
     public boolean deleteRecord(long rowId) 
     {
         return db.delete(DATABASE_TABLE, KEY_ROWID + 
         		"=" + rowId, null) > 0;
     }
 
-    //---retrieves all the records---
+    /** getAllRecords returns entire database, which should only consist of one row on a user's
+     * client database, since that row will be continually updated
+     * 
+     * @return
+     */
     public Cursor getAllRecords() 
     {
         return db.query(DATABASE_TABLE, new String[] {
@@ -115,7 +154,12 @@ public class DataStore
                 null);
     }
 
-    //---retrieves a particular title---
+    /**  getRecord retrieves one record from the SQLite database
+     * 
+     * @param rowId
+     * @return
+     * @throws SQLException
+     */
     public Cursor getRecord(long rowId) throws SQLException 
     {
         Cursor mCursor =
@@ -139,7 +183,16 @@ public class DataStore
         return mCursor;
     }
 
-    //---updates a record---
+    /** updateRecord updates one record (the only one that should exist) in the SQLite database
+     * 
+     * @param rowId
+     * @param wins
+     * @param losses
+     * @param energy
+     * @param infantry
+     * @param knowledge
+     * @return
+     */
     public boolean updateRecord(long rowId, int wins, int losses, int energy, int infantry, int knowledge) 
     {
         ContentValues args = new ContentValues();

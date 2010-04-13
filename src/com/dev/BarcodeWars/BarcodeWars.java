@@ -9,6 +9,12 @@ import android.util.Log;
 import android.view.View; 
 import android.widget.*;
 
+/**Class BarcodeWars is the driver class behind the BarcodeWars application
+ * 
+ * @author Greg Charette
+ * @author Steve Aquillano
+ *
+ */
 public class BarcodeWars extends Activity 
 { 
 	Button scanButton;
@@ -20,7 +26,9 @@ public class BarcodeWars extends Activity
 	int knowledge = 0;
 	String increasedAttribute = null;
 	
-	/** Called when the activity is first created. */
+	/**onCreate instantiates the initial program objects and sets up layout when program
+	 * is opened
+	*/
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
 	{ 
@@ -32,6 +40,10 @@ public class BarcodeWars extends Activity
 		scanResultText = (TextView) this.findViewById(R.id.scanResultText);
 	}
 	
+	/**Method listens for the scanning button to be clicked.  When this happens,
+	 * a new intent is created that opens the scanning class and calls @startActivityForResult
+	 * to start performing the desired operation
+	*/
 	public final Button.OnClickListener ocl = new Button.OnClickListener() {
 	    public void onClick(View v) {
 	      Intent intent = new Intent("com.google.zxing.client.android.SCAN");
@@ -39,7 +51,10 @@ public class BarcodeWars extends Activity
 	    }
 	  };
 
-	
+	/**onActivityResult initiates scanner activity, passing the barcode into the method, which calls
+	 * the method @calcScanPoints to calculate the total points the player receives from
+	 * the object that was scanned
+	*/
 	public void onActivityResult(int requestCode, int resultCode, Intent intent) 
 	{
 	    if (requestCode == 0) 
@@ -64,7 +79,12 @@ public class BarcodeWars extends Activity
 	    	}
 	    }
 	  }
-
+	/**calcScanPoints takes in the result of the barcode scan, calculates the total number of points for the scan,
+	 * and assigns the points to the appropriate player attribute
+	 * @param scanResult
+	 * @return - String calcScanPoints - Total points gained from the object scanned
+	 * @throws NullPointerException
+	 */
 	public String calcScanPoints(String scanResult) throws NullPointerException
 	{
 		int finalScannedPoints = 0;
@@ -105,6 +125,6 @@ public class BarcodeWars extends Activity
 		Log.v("randomNumber: ", Integer.toString(randomNum));
 		
 		return Integer.toString(finalScannedPoints);
-	}
+	} 
 }
 	
